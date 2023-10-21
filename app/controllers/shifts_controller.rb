@@ -51,7 +51,7 @@ class ShiftsController < ApplicationController
 
         if @shift.valid?
             @shift.save
-            render json: @shift, status: :created
+            render 'shifts/show'
         else
             render json: { errors: @shift.errors.full_messages }, status: :unprocessable_entity
         end
@@ -70,7 +70,7 @@ class ShiftsController < ApplicationController
                     if @shift.update(shift_update_params)
                         @shift.set_time_out_and_duration
                         @shift.save!
-                        render json: @shift, status: :ok
+                        render 'shifts/show'
                     else
                         render json: { error: @shift.errors.full_messages }, status: :unprocessable_entity
                     end
@@ -83,7 +83,7 @@ class ShiftsController < ApplicationController
                 render json: { error: "Cannot approve shift without duration" }, status: :unprocessable_entity
             else
                 if @shift.update(admin_shift_params)
-                    render json: @shift, status: :ok
+                    render 'shifts/show'
                 else
                     render json: { error: @shift.errors.full_messages }, status: :unprocessable_entity
                 end

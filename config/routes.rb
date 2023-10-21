@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   resources :sites
 
   resources :shifts
+
+  resources :user_payslips
   # Defines the root path route ("/")
   # root "articles#index"
 end

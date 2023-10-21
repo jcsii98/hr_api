@@ -1,5 +1,6 @@
 class Shift < ApplicationRecord
     belongs_to :user
+    belongs_to :user_payslip, optional: true
     belongs_to :site
     
     validates :photo_in, presence: true

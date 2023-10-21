@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_21_180515) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_21_215815) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -62,6 +62,28 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_21_180515) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "user_payslip_shifts", force: :cascade do |t|
+    t.bigint "user_payslip_id"
+    t.bigint "shift_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shift_id"], name: "index_user_payslip_shifts_on_shift_id"
+    t.index ["user_payslip_id"], name: "index_user_payslip_shifts_on_user_payslip_id"
+  end
+
+  create_table "user_payslips", force: :cascade do |t|
+    t.bigint "user_id"
+    t.date "week_start"
+    t.date "week_end"
+    t.date "date"
+    t.integer "amount"
+    t.integer "cash_advance"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "total_duration"
+    t.index ["user_id"], name: "index_user_payslips_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.text "provider", default: "email", null: false
     t.text "uid", default: "", null: false
@@ -92,4 +114,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_21_180515) do
 
   add_foreign_key "shifts", "sites"
   add_foreign_key "shifts", "users"
+  add_foreign_key "user_payslip_shifts", "shifts"
+  add_foreign_key "user_payslip_shifts", "user_payslips"
+  add_foreign_key "user_payslips", "users"
 end
