@@ -40,7 +40,7 @@ class UserPayslipsController < ApplicationController
         if @userPayslip
             render 'user_payslips/show'
         else 
-            render json: { error: "cannot find" }
+            render json: { error: "Cannot find payslip" }
         end
     end
 

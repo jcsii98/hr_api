@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_21_215815) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_22_035220) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -39,6 +39,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_21_215815) do
     t.index ["uid", "provider"], name: "index_admins_on_uid_and_provider", unique: true
   end
 
+  create_table "expenses", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "site_id"
+    t.integer "amount"
+    t.text "scope"
+    t.date "date"
+    t.text "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "name"
+    t.index ["site_id"], name: "index_expenses_on_site_id"
+    t.index ["user_id"], name: "index_expenses_on_user_id"
+  end
+
   create_table "shifts", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "site_id"
@@ -53,6 +67,26 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_21_215815) do
     t.datetime "updated_at", null: false
     t.index ["site_id"], name: "index_shifts_on_site_id"
     t.index ["user_id"], name: "index_shifts_on_user_id"
+  end
+
+  create_table "site_payslip_expenses", force: :cascade do |t|
+    t.bigint "site_payslip_id"
+    t.bigint "expense_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expense_id"], name: "index_site_payslip_expenses_on_expense_id"
+    t.index ["site_payslip_id"], name: "index_site_payslip_expenses_on_site_payslip_id"
+  end
+
+  create_table "site_payslips", force: :cascade do |t|
+    t.bigint "site_id"
+    t.date "week_start"
+    t.date "week_end"
+    t.date "date"
+    t.integer "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["site_id"], name: "index_site_payslips_on_site_id"
   end
 
   create_table "sites", force: :cascade do |t|
@@ -112,8 +146,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_21_215815) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "expenses", "sites"
+  add_foreign_key "expenses", "users"
   add_foreign_key "shifts", "sites"
   add_foreign_key "shifts", "users"
+  add_foreign_key "site_payslip_expenses", "expenses"
+  add_foreign_key "site_payslip_expenses", "site_payslips"
+  add_foreign_key "site_payslips", "sites"
   add_foreign_key "user_payslip_shifts", "shifts"
   add_foreign_key "user_payslip_shifts", "user_payslips"
   add_foreign_key "user_payslips", "users"

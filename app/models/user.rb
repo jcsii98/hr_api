@@ -10,5 +10,6 @@ class User < ActiveRecord::Base
 
   has_many :shifts
   has_many :user_payslips
+  has_many :expenses
   
 end

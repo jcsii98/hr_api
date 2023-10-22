@@ -32,6 +32,7 @@ class ShiftsController < ApplicationController
                 @shifts = @shifts.where(user_id: params[:user_id])
             else
                 render json: { error: "user_id not present" }, status: :unprocessable_entity
+                return
             end
         end
         render 'shifts/index'

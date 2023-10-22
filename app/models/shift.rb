@@ -5,6 +5,9 @@ class Shift < ApplicationRecord
     
     validates :photo_in, presence: true
 
+    has_one_attached :photo_in
+    has_one_attached :photo_out
+
     before_create :set_time_in_and_date
 
     def set_time_out_and_duration
