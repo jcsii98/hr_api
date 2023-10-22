@@ -18,6 +18,8 @@ Rails.application.routes.draw do
   resources :expenses
 
   resources :site_payslips
+
+  post '/upload_to_s3', to: 's3_test#upload_to_s3'
   # Defines the root path route ("/")
   # root "articles#index"
 end
