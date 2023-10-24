@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   mount_devise_token_auth_for 'User', at: 'auth'
 
   resources :users
+  get '/remember_me', to: 'users#remember_me'
 
   mount_devise_token_auth_for 'Admin', at: 'admin_auth'
   as :admin do

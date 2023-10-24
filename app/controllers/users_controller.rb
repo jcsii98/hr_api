@@ -2,25 +2,12 @@ class UsersController < ApplicationController
     before_action :authenticate_user!
 
     # for user with admin kind only
-    before_action :verify_kind 
+    # before_action :verify_kind, except: [:remember_me] 
 
-    before_action :set_user, only: [:show, :update]
+    # before_action :set_user, only: [:show, :update]
 
     def index
         @users = User.where(kind: "user")
-        case params[:status]
-        when 'all'
-            @indexed_users = @users
-        when 'approved'
-            @indexed_users = @users.where(status: 'approved')
-        when 'pending'
-            @indexed_users = @users.where(status: 'pending')
-        when 'archived'
-            @indexed_users = @users.where(status: 'archived')
-        else
-            render json: { error: "Invalid status parameter" }, status: :bad_request
-            return
-        end
         
         render 'users/index'
     end
@@ -35,6 +22,11 @@ class UsersController < ApplicationController
         else 
             render json: { errors: user.errors }, status: :unprocessable_entity
         end
+    end
+
+    def remember_me
+        user = current_user
+        render json: user
     end
 
     private

@@ -6,24 +6,20 @@ class SitesController < ApplicationController
     before_action :set_site, only: [:show, :update, :destroy]
 
     def index
-        if current_user.kind == "user"
+        case params[:status]
+        when 'all'
+            @sites = Site.all
+        when 'archived'
+            @sites = Site.where(status: 'archived')
+        when 'active'
             @sites = Site.where(status: 'active')
-        else
-            case params[:status]
-            when 'all'
-                @sites = Site.all
-            when 'archived'
-                @sites = Site.where(status: 'archived')
-            when 'active'
-                @sites = Site.where(status: 'active')
-            when 'hidden'
-                @sites = Site.where(status: 'hidden')
-            else 
-                render json: { error: "Invalid status parameter" }, status: :bad_request
-                return
-            end
-        render 'sites/index'
+        when 'hidden'
+            @sites = Site.where(status: 'hidden')
+        else 
+            render json: { error: "Invalid status parameter" }, status: :bad_request
+            return
         end
+        render 'sites/index'
     end
 
     def create

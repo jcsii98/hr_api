@@ -1,7 +1,11 @@
-json.array! @indexed_users do |indexed_user|
-    json.id indexed_user.id
-    json.email indexed_user.email
-    json.full_name indexed_user.full_name
-    json.kind indexed_user.kind
-    json.status indexed_user.status
+sorted_users = @users.sort_by { |user| user.last_name }
+
+json.array! sorted_users do |user|
+    json.id user.id
+    json.email user.email
+    json.first_name user.first_name
+    json.middle_name user.middle_name
+    json.last_name user.last_name
+    json.kind user.kind
+    json.status user.status
 end

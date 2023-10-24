@@ -45,7 +45,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_22_035220) do
     t.integer "amount"
     t.text "scope"
     t.date "date"
-    t.text "status"
+    t.text "status", default: "pending"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "name"
@@ -131,12 +131,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_22_035220) do
     t.datetime "confirmation_sent_at"
     t.text "unconfirmed_email"
     t.text "kind"
-    t.text "full_name"
+    t.text "first_name"
+    t.text "middle_name"
+    t.text "last_name"
     t.text "profile_picture"
     t.text "email"
     t.integer "personal_rate"
     t.date "birthday"
     t.text "status", default: "pending"
+    t.text "philhealth"
+    t.text "pagibig"
+    t.text "tin"
     t.json "tokens"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

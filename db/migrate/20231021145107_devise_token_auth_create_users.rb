@@ -30,13 +30,18 @@ class DeviseTokenAuthCreateUsers < ActiveRecord::Migration[7.0]
 
       ## User Info
       t.text :kind
-      t.text :full_name
+      t.text :first_name
+      t.text :middle_name
+      t.text :last_name
       t.text :profile_picture
       t.text :email
       t.integer :personal_rate
       t.date :birthday
       t.text :status, default: "pending"
-
+      t.text :philhealth
+      t.text :pagibig
+      t.text :tin
+      
       ## Tokens
       t.json :tokens
 
