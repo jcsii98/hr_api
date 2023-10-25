@@ -6,6 +6,9 @@ class ExpensesController < ApplicationController
         start_date = params[:start_date].to_date
         end_date = params[:end_date].to_date
 
+        Rails.logger.info("end_date value: #{end_date}")
+        Rails.logger.info("Date.today value: #{Date.today}")
+
         if end_date > Date.today
             render json: { error: "End date is invalid, cannot be a future date." }, status: :unprocessable_entity
             return
