@@ -5,10 +5,19 @@ class ExpensesController < ApplicationController
     def index
         start_date = params[:start_date].to_date
         end_date = params[:end_date].to_date
+
+        if end_date > Date.today
+            render json: { error: "End date is invalid, cannot be a future date." }, status: :unprocessable_entity
+            return
+        end
         
         if params[:user_id].present?
             if params[:site_id].present?
-                @expenses_within_range = current_user.expenses.where(date: start_date..end_date, site_id: params[:site_id])
+                unless params[:scope].blank?
+                    @expenses_within_range = current_user.expenses.where(date: start_date..end_date, site_id: params[:site_id], scope: params[:scope])
+                else
+                    @expenses_within_range = current_user.expenses.where(date: start_date..end_date, site_id: params[:site_id])
+                end
             else
                 @expenses_within_range = current_user.expenses.where(date: start_date..end_date)
             end
@@ -20,6 +29,7 @@ class ExpensesController < ApplicationController
                 return
             end
         end
+
 
         case params[:status]
         when 'all'
@@ -88,7 +98,7 @@ class ExpensesController < ApplicationController
     end
 
     def expense_params
-        params.require(:expense).permit(:site_id, :user_id, :amount, :scope, :status, :date)
+        params.require(:expense).permit(:site_id, :user_id, :amount, :scope, :status, :date, :name)
     end
 
 end
