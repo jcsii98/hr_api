@@ -10,6 +10,11 @@ class ExpensesController < ApplicationController
             render json: { error: "End date is invalid, cannot be a future date." }, status: :unprocessable_entity
             return
         end
+
+        if start_date > end_date
+            render json: { error: "Start date cannot be after end date. Please select a valid date."}, status: :unprocessable_entity
+            return
+        end
         
         if params[:user_id].present?
             if params[:site_id].present?
