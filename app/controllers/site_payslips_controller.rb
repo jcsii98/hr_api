@@ -4,17 +4,22 @@ class SitePayslipsController < ApplicationController
     before_action :set_site, only: [:index, :create]
 
     def index
-        @sitePayslips = @site.site_payslips
+        @sitePayslips = current_user.site_payslips.where(site: @site)
 
         render 'site_payslips/index'
     end
 
     def create
-        @sitePayslip = @site.site_payslips.new(site_payslip_params)
-        
+        @sitePayslip = current_user.site_payslips.new(site_payslip_params)
+        @sitePayslip.site = @site  # Associate the payslip with the site
+
         expenses_within_range = Expense.where(date: @sitePayslip.week_start..@sitePayslip.week_end, site_id: @site.id)
 
-        approved_expenses = expenses_within_range.where(status: 'approved')
+        if params[:scope].present? && !params[:scope].blank?
+            approved_expenses = expenses_within_range.where(status: 'approved', scope: params[:scope])
+        else
+            approved_expenses = expenses_within_range.where(status: 'approved')
+        end
 
         @sitePayslip.expenses = approved_expenses
 

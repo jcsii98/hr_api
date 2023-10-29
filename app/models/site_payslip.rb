@@ -1,4 +1,6 @@
 class SitePayslip < ApplicationRecord
+    belongs_to :user
+    belongs_to :site
     has_many :site_payslip_expenses
     has_many :expenses, through: :site_payslip_expenses
 
