@@ -2,10 +2,14 @@ class SitePayslipsController < ApplicationController
     before_action :authenticate_user!
     before_action :verify_kind
     before_action :set_site, only: [:index, :create]
+    before_action :find_payslip, only: [:show]
 
     def index
-        @sitePayslips = current_user.site_payslips.where(site: @site)
-
+        if params[:user_id].present? && !params[:user_id].blank?
+            @sitePayslips = @site.site_payslips.where(user_id: params[:user_id])
+        else
+            @sitePayslips = @site.site_payslips
+        end
         render 'site_payslips/index'
     end
 
@@ -33,7 +37,6 @@ class SitePayslipsController < ApplicationController
     end
 
     def show
-        @sitePayslip = SitePayslip.find_by(id: params[:id])
         if @sitePayslip
             render 'site_payslips/show'
         else
@@ -53,16 +56,17 @@ class SitePayslipsController < ApplicationController
     end
 
     def set_site
-       @site = Site.find_by(id: params[:id])
-       if @site
-            return
-       else
+        @site = Site.find_by(id: params[:site_id])
+        unless @site
             render json: { error: "Site not found" }, status: :not_found
-       end 
+        end
+    end
+
+    def find_payslip
+        @sitePayslip = SitePayslip.find_by(id: params[:id])
     end
 
     def site_payslip_params
         params.require(:site_payslip).permit(:week_start, :week_end)
     end
-    
 end

@@ -9,13 +9,7 @@ class Expense < ApplicationRecord
     validates :date, presence: true
     validate :date_not_in_future
 
-    before_create :set_date
-
     private
-    
-    def set_date
-        self.date = Date.current
-    end
 
     def date_not_in_future
         if date.present? && date > Date.current

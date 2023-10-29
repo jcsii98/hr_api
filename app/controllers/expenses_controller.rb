@@ -20,43 +20,30 @@ class ExpensesController < ApplicationController
             return
         end
         
-        if params[:user_id].present?
-            if params[:site_id].present?
-                unless params[:scope].blank?
-                    @expenses_within_range = current_user.expenses.where(site_id: params[:site_id], date: start_date..end_date, scope: params[:scope])
+        if params[:user_id].present? && !params[:user_id].blank?
+            @user = User.find_by(id: params[:user_id])
+            if params[:site_id].present? && !params[:site_id].blank?
+                @site = Site.find_by(id: params[:site_id])
+                if params[:scope].present? && !params[:scope].blank?
+                    @expenses_within_range = @site.expenses.where(user_id: params[:user_id], date: start_date..end_date, scope: params[:scope])
                 else
-                    @expenses_within_range = current_user.expenses.where(site_id: params[:site_id], date: start_date..end_date)
+                    @expenses_within_range = @site.expenses.where(user_id: params[:user_id], date: start_date..end_date)
                 end
             else
-                @expenses_within_range = current_user.expenses.where(date: start_date..end_date)
+                @expenses_within_range = @user.expenses.where(date: start_date..end_date)
             end
         else
-            if params[:site_id].present?
-                unless params[:scope].blank?
-                    @expenses_within_range = Expense.where(site_id: params[:site_id], date: start_date..end_date, scope: params[:scope])
+            if params[:site_id].present? && !params[:site_id].blank?
+                @site = Site.find_by(id: params[:site_id])
+                if params[:scope].present? && !params[:scope].blank?
+                    @expenses_within_range = @site.expenses.where(date: start_date..end_date, scope: params[:scope])
                 else
-                    @expenses_within_range = Expense.where(site_id: params[:site_id], date: start_date..end_date)
+                    @expenses_within_range = @site.expenses.where(date: start_date..end_date)
                 end
             else
-                render json: { error: "site_id not present" }, status: :unprocessable_entity
+                render json: { error: "site_id not provided" }, status: :unprocessable_entity
                 return
             end
-        end
-
-        case params[:status]
-        when 'all'
-            @expenses = @expenses_within_range
-        when 'approved'
-            @expenses = @expenses_within_range.where(status: 'approved')
-        when 'pending'
-            @expenses = @expenses_within_range.where(status: 'pending')
-        when 'rejected' 
-            @expenses = @expenses_within_range.where(status: 'rejected')
-        when 'completed'
-            @expenses = @expenses_within_range.where(status: 'completed')
-        else
-            render json: { error: "Invalid status parameter" }, status: :bad_request
-            return
         end
         render 'expenses/index'
     end

@@ -1,4 +1,4 @@
-json.array! @expenses do |expense|
+json.array! @expenses_within_range do |expense|
     json.id expense.id
     json.site_id expense.site_id
     json.user_id expense.user_id
