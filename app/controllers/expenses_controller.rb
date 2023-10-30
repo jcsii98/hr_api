@@ -84,6 +84,18 @@ class ExpensesController < ApplicationController
         end
     end
 
+    def destroy
+        if @expense.status == "approved" || @expense.status == "completed"
+            render json: { error: "Cannot update approved expense" }, status: :unprocessable_entity
+        else
+            if @expense.destroy
+                render json: { status: 'success', message: 'Expense has been deleted' }
+            else
+                render json: { status: 'error', errors: @expense.errors.full_messages }, status: :unprocessable_entity
+            end
+        end
+    end
+
     private
     
     def set_expense
